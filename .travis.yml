@@ -1,0 +1,21 @@
+sudo: required
+dist: trusty
+language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+install:
+  - wget -q https://codeload.github.com/glassechidna/zxing-cpp/tar.gz/master -O master.tar.gz
+  - tar xzf master.tar.gz
+  - cd zxing-cpp-master/
+  - mkdir build/
+  - cd build/
+  - cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_BUILD_TYPE=Release
+      -DCMAKE_CXX_FLAGS=-fPIC ..
+  - make
+  - sudo make install
+  - cd ../..
+  - make install
+script:
+  - make lint test
