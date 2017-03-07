@@ -11,7 +11,7 @@ def read(file_path):
 setup(
     name='zxinglight',
     version='1.0.0',
-    description='A simple zxing-cpp wrapper',
+    description='A simple ZXing C++ wrapper',
     long_description=read('README.rst'),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -61,6 +61,11 @@ setup(
         'Pillow'
     ],
     extras_require={
+        'docs': [
+            'Sphinx',
+            'sphinx-autobuild',
+            'sphinx_rtd_theme'
+        ],
         'test': [
             'flake8',
             'nose',
