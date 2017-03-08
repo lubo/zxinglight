@@ -1,7 +1,7 @@
 ZXingLight
 ==========
 
-|build-status| |docs-status|
+|build-status| |docs-status| |pypi-package|
 
 A simple wrapper for `ZXing C++`_ inspired by zbarlight_.
 
@@ -17,3 +17,6 @@ Documentation is available on <https://zxinglight.readthedocs.io/en/latest/>.
 .. |docs-status| image:: https://readthedocs.org/projects/zxinglight/badge/?version=latest
     :alt: Documentation status
     :target: https://zxinglight.readthedocs.io/en/latest/
+.. |pypi-package| image:: https://badge.fury.io/py/zxinglight.svg
+    :alt: PyPI package
+    :target: https://badge.fury.io/py/zxinglight
