@@ -3,24 +3,23 @@
 import sys
 from setuptools import setup, find_packages, Extension
 
+with open('README.rst') as readme:
+    long_description = readme.read()
 
-def read(file_path):
-    with open(file_path) as fp:
-        return fp.read()
-
-
-libraries = [
+ext_libraries = [
     'zxing'
 ]
-if sys.platform == 'darwin':
-    libraries.append('iconv')
 
+if sys.platform == 'darwin':
+    ext_libraries += [
+        'iconv'
+    ]
 
 setup(
     name='zxinglight',
     version='1.0.0',
     description='A simple ZXing C++ wrapper',
-    long_description=read('README.rst'),
+    long_description=long_description,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -40,7 +39,7 @@ setup(
     ],
     author='Ľubomír Kučera',
     author_email='lubomir.kucera.jr@gmail.com',
-    url='https://github.com/Lubo/zxinglight',
+    url='https://github.com/lubo/zxinglight',
     license='MIT',
     packages=find_packages(exclude=[
         'tests'
@@ -55,7 +54,7 @@ setup(
             extra_compile_args=[
                 '-std=c++11'
             ],
-            libraries=libraries,
+            libraries=ext_libraries,
         ),
     ],
     include_package_data=True,
