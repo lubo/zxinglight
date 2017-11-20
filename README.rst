@@ -11,9 +11,9 @@ Documentation is available on <https://zxinglight.readthedocs.io/en/latest/>.
 .. _zbarlight: https://github.com/Polyconseil/zbarlight
 
 
-.. |build-status| image:: https://travis-ci.org/Lubo/zxinglight.svg?branch=master
+.. |build-status| image:: https://travis-ci.org/lubo/zxinglight.svg?branch=master
     :alt: Build status
-    :target: https://travis-ci.org/Lubo/zxinglight
+    :target: https://travis-ci.org/lubo/zxinglight
 .. |docs-status| image:: https://readthedocs.org/projects/zxinglight/badge/?version=latest
     :alt: Documentation status
     :target: https://zxinglight.readthedocs.io/en/latest/
