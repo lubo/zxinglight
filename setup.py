@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import sys
 from setuptools import setup, find_packages, Extension
 
 
 def read(file_path):
     with open(file_path) as fp:
         return fp.read()
+
+
+libraries = [
+    'zxing'
+]
+if sys.platform == 'darwin':
+    libraries.append('iconv')
 
 
 setup(
@@ -47,9 +55,7 @@ setup(
             extra_compile_args=[
                 '-std=c++11'
             ],
-            libraries=[
-                'zxing'
-            ]
+            libraries=libraries,
         ),
     ],
     include_package_data=True,
