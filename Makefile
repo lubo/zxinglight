@@ -9,7 +9,7 @@ install:
 	pip install -e .[test]
 
 lint:
-	flake8 zxinglight/ tests/ docs/ setup.py
+	flake8
 
 test:
 	nosetests tests/
