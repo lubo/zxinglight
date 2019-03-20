@@ -36,7 +36,18 @@ class ReadCodesTestCase(TestCase):
             'first zxinglight test qr code', 'second zxinglight test qr code'
         ])
 
+    def test_finding_one_of_two_qr_code(self):
+        self.assertEqual(
+            read_codes(get_image('two_qr_codes'), multi=False), ['first zxinglight test qr code'],
+        )
+
     def test_small_rotated_qr_code(self):
-        self.assertEqual(read_codes(get_image('small_rotated_qr_code'), try_harder=True), [
-            '217EXP0112'
-        ])
+        self.assertEqual(
+            read_codes(get_image('small_rotated_qr_code'), try_harder=True), ['217EXP0112'],
+        )
+
+    def test_small_rotated_qr_code_single(self):
+        self.assertEqual(
+            read_codes(get_image('small_rotated_qr_code'), try_harder=True, multi=False),
+            ['217EXP0112'],
+        )
