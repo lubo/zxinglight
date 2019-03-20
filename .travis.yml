@@ -1,10 +1,10 @@
 sudo: required
-dist: trusty
+dist: xenial
 language: python
 python:
-  - '3.4'
   - '3.5'
   - '3.6'
+  - '3.7'
 install:
   - wget -q https://codeload.github.com/glassechidna/zxing-cpp/tar.gz/master -O master.tar.gz
   - tar xzf master.tar.gz
@@ -28,4 +28,4 @@ deploy:
   on:
     branch: master
     tags: true
-    condition: "$TRAVIS_PYTHON_VERSION = '3.6'"
+    condition: "$TRAVIS_PYTHON_VERSION = '3.7'"
