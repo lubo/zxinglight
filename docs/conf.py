@@ -13,6 +13,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from datetime import datetime
 import os
 import sys
 
@@ -61,8 +62,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ZXingLight'
-copyright = '2017, Ľubomír Kučera'
 author = 'Ľubomír Kučera'
+copyright = '{}, {}'.format(datetime.now().year, author)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
