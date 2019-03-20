@@ -16,9 +16,10 @@ install:
   - make
   - sudo make install
   - cd ../..
+  - rm -rf master.tar.gz zxing-cpp-master
   - make install
 script:
-  - make lint test
+  - make lint test clean
 deploy:
   provider: pypi
   user:

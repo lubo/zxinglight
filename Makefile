@@ -3,7 +3,7 @@
 all: install lint test
 
 clean:
-	rm -rf build dist docs/_build zxinglight/*.so
+	rm -rf build dist docs/_build zxinglight/*.so zxinglight.egg-info
 
 docs:
 	sphinx-autobuild -z zxinglight/ docs/ docs/_build/html/
