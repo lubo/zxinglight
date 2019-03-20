@@ -67,7 +67,7 @@ class BarcodeType(IntEnum):
     UPC_EAN_EXTENSION = 17
 
 
-def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=False):
+def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=False, multi=True):
     """
     Reads codes from a PIL Image.
 
@@ -77,6 +77,7 @@ def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=Fa
         try_harder (bool): Spend more time trying to find a barcode.
         hybrid (bool): Use Hybrid Binarizer instead of Global Binarizer. For more information,
             see `ZXing's documentation`_.
+        multi (bool): Search for multiple barcodes in a single image.
 
     Returns:
         A list of barcode values.
@@ -96,4 +97,4 @@ def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=Fa
     raw_image = grayscale_image.tobytes()
     width, height = grayscale_image.size
 
-    return zxing_read_codes(raw_image, width, height, barcode_type, try_harder, hybrid)
+    return zxing_read_codes(raw_image, width, height, barcode_type, try_harder, hybrid, multi)

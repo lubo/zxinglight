@@ -35,8 +35,10 @@ static void log_error(const string &msg) {
     PyObject_CallMethod(logger, "error", "O", PyUnicode_FromString(msg.c_str()));
 }
 
-static vector<string> *_zxing_read_codes(char *image, int image_size, int width, int height,
-                                         int barcode_type, bool try_harder, bool hybrid) {
+static vector<string> *_zxing_read_codes(
+    char *image, int image_size, int width, int height,int barcode_type, bool try_harder,
+    bool hybrid, bool multi
+    ) {
     try {
         ArrayRef<char> data = ArrayRef<char>(image, image_size);
 
@@ -65,9 +67,16 @@ static vector<string> *_zxing_read_codes(char *image, int image_size, int width,
 
         Ref<BinaryBitmap> bitmap(new BinaryBitmap(binarizer));
 
-        MultiFormatReader delegate;
-        GenericMultipleBarcodeReader reader(delegate);
-        vector<Ref<Result> > results = reader.decodeMultiple(bitmap, hints);
+        vector<Ref<Result> > results;
+        if (multi) {
+            MultiFormatReader delegate;
+            GenericMultipleBarcodeReader reader(delegate);
+            results = reader.decodeMultiple(bitmap, hints);
+        } else {
+            // Ref<T> is an autodestructor; the `new` *does not leak*.
+            Ref<Reader> reader(new MultiFormatReader);
+            results = vector<Ref<Result> >(1, reader->decode(bitmap, hints));
+        }
 
         vector<string> *codes = new vector<string>();
 
@@ -92,10 +101,10 @@ static vector<string> *_zxing_read_codes(char *image, int image_size, int width,
 static PyObject* zxing_read_codes(PyObject *self, PyObject *args) {
     PyObject *python_image;
     int width, height, barcode_type;
-    int try_harder, hybrid;
+    int try_harder, hybrid, multi;
 
-    if (!PyArg_ParseTuple(args, "Siiipp", &python_image, &width, &height, &barcode_type,
-                          &try_harder, &hybrid)) {
+    if (!PyArg_ParseTuple(args, "Siiippp", &python_image, &width, &height, &barcode_type,
+                          &try_harder, &hybrid, &multi)) {
         return NULL;
     }
 
@@ -105,7 +114,7 @@ static PyObject* zxing_read_codes(PyObject *self, PyObject *args) {
     PyBytes_AsStringAndSize(python_image, &image, &image_size);
 
     vector<string> *results = _zxing_read_codes(
-        image, image_size, width, height, barcode_type, try_harder, hybrid
+        image, image_size, width, height, barcode_type, try_harder, hybrid, multi
         );
 
     PyObject *codes = PyList_New(0);
