@@ -73,6 +73,7 @@ setup(
         ],
         'test': [
             'flake8',
+            'flake8-bugbear',
             'nose',
             'pep8-naming'
         ]
