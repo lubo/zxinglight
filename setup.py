@@ -17,7 +17,7 @@ if sys.platform == 'darwin':
 
 setup(
     name='zxinglight',
-    version='1.0.1',
+    version='1.1.0',
     description='A simple ZXing C++ wrapper',
     long_description=long_description,
     classifiers=[
