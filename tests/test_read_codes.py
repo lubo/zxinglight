@@ -51,3 +51,18 @@ class ReadCodesTestCase(TestCase):
             read_codes(get_image('small_rotated_qr_code'), try_harder=True, multi=False),
             ['217EXP0112'],
         )
+
+    def test_embedded_nuls(self):
+        """
+        amen-*.png contain a music sample -- binary dara with anything goes including embedded nuls.
+
+        They were created with
+        cat amen.mp3 | qrencode -S -v 16 -8 -o amen.png  # -8 = bytes = binary
+        """
+
+        codes = read_codes(get_image('amen-02'), barcode_type=BarcodeType.QR_CODE,
+                           try_harder=True, multi=False)
+        self.assertTrue(len(codes) > 0)
+        mp3_chunk = codes[0]
+        print(mp3_chunk)
+        self.assertTrue(b"\x00" in mp3_chunk)
