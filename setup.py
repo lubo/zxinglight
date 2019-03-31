@@ -62,10 +62,13 @@ setup(
     setup_requires=[
         'setuptools',
     ],
-    install_requires=[
-        'Pillow'
-    ],
     extras_require={
+        'PIL': [
+            'Pillow'
+        ],
+        'cv2': [
+            'cv2'
+        ],
         'docs': [
             'Sphinx',
             'sphinx-autobuild',
