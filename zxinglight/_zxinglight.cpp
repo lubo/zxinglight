@@ -35,7 +35,7 @@ static void log_error(const string &msg) {
     PyObject_CallMethod(logger, "error", "O", PyUnicode_FromString(msg.c_str()));
 }
 
-static vector<string> *_zxing_read_codes(
+static vector<Ref<Result> > *_zxing_read_codes(
     char *image, int image_size, int width, int height,int barcode_type, bool try_harder,
     bool hybrid, bool multi
     ) {
@@ -67,24 +67,19 @@ static vector<string> *_zxing_read_codes(
 
         Ref<BinaryBitmap> bitmap(new BinaryBitmap(binarizer));
 
-        vector<Ref<Result> > results;
+        vector<Ref<Result> > *results;
         if (multi) {
             MultiFormatReader delegate;
             GenericMultipleBarcodeReader reader(delegate);
-            results = reader.decodeMultiple(bitmap, hints);
+            results = new vector<Ref<Result> >(reader.decodeMultiple(bitmap, hints));
         } else {
+            // There is only one result, but wrap it in a vector anyway to give a consistent interface
             // Ref<T> is an autodestructor; the `new` *does not leak*.
             Ref<Reader> reader(new MultiFormatReader);
-            results = vector<Ref<Result> >(1, reader->decode(bitmap, hints));
+            results = new vector<Ref<Result> >(1, reader->decode(bitmap, hints));
         }
 
-        vector<string> *codes = new vector<string>();
-
-        for (const Ref<Result> &result : results) {
-            codes->push_back(result->getText()->getText());
-        }
-
-        return codes;
+        return results;
     } catch (const ReaderException &e) {
         log_error((string) "zxing::ReaderException: " + e.what());
     } catch (const zxing::IllegalArgumentException &e) {
@@ -113,17 +108,25 @@ static PyObject* zxing_read_codes(PyObject *self, PyObject *args) {
 
     PyBytes_AsStringAndSize(python_image, &image, &image_size);
 
-    vector<string> *results = _zxing_read_codes(
+    vector<Ref<Result> > *results = _zxing_read_codes(
         image, image_size, width, height, barcode_type, try_harder, hybrid, multi
         );
 
     PyObject *codes = PyList_New(0);
 
     if (results != NULL) {
-        for (const string &code : *results) {
-            PyList_Append(codes, PyUnicode_FromString(code.c_str()));
-        }
+        for (const Ref<Result> &result : *results) {
+            PyObject* text = PyUnicode_FromString(result->getText()->getText().c_str());
 
+            PyObject* points = PyList_New(0);
+            for(auto point : result->getResultPoints()->values()) {
+                PyList_Append(points, Py_BuildValue("ff", point->getX(), point->getY()));
+            }
+
+            PyObject* format = PyLong_FromUnsignedLong(result->getBarcodeFormat());
+
+            PyList_Append(codes, PyTuple_Pack(3, text, points, format));
+        }
         delete results;
     }
 
