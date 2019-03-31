@@ -67,9 +67,10 @@ class BarcodeType(IntEnum):
     UPC_EAN_EXTENSION = 17
 
 
-def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=False, multi=True):
+def read_codes_full(image, barcode_type=BarcodeType.NONE,
+                    try_harder=False, hybrid=False, multi=True):
     """
-    Reads codes from a PIL Image.
+    Reads codes from a PIL Image and includes metadata about what was found.
 
     Args:
         image (PIL.Image.Image): Image to read barcodes from.
@@ -80,7 +81,7 @@ def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=Fa
         multi (bool): Search for multiple barcodes in a single image.
 
     Returns:
-        A list of barcode values.
+        A list [(code, position, type), ...] containing each barcode found.
 
     .. _ZXing's documentation:
         https://zxing.github.io/zxing/apidocs/com/google/zxing/Binarizer.html
@@ -98,3 +99,25 @@ def read_codes(image, barcode_type=BarcodeType.NONE, try_harder=False, hybrid=Fa
     width, height = grayscale_image.size
 
     return zxing_read_codes(raw_image, width, height, barcode_type, try_harder, hybrid, multi)
+
+
+def read_codes(*args, **kwargs):
+    """
+    Reads codes from a PIL Image.
+
+    Args:
+        image (PIL.Image.Image): Image to read barcodes from.
+        barcode_type (zxinglight.BarcodeType): Barcode type to look for.
+        try_harder (bool): Spend more time trying to find a barcode.
+        hybrid (bool): Use Hybrid Binarizer instead of Global Binarizer. For more information,
+            see `ZXing's documentation`_.
+        multi (bool): Search for multiple barcodes in a single image.
+
+    Returns:
+        A list of barcode contents found.
+
+    .. _ZXing's documentation:
+        https://zxing.github.io/zxing/apidocs/com/google/zxing/Binarizer.html
+    """
+    codes = read_codes_full(*args, **kwargs)
+    return [text for text, points, format in codes]
