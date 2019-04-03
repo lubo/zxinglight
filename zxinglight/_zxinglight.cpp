@@ -121,7 +121,7 @@ static PyObject* zxing_read_codes(PyObject *self, PyObject *args) {
 
     if (results != NULL) {
         for (const string &code : *results) {
-            PyList_Append(codes, PyUnicode_FromString(code.c_str()));
+            PyList_Append(codes, PyBytes_FromStringAndSize(code.data(), code.size()));
         }
 
         delete results;
